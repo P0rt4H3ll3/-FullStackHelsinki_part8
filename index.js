@@ -99,7 +99,7 @@ const typeDefs = `
   type Query {
     bookCount : Int!
     authorCount: Int!
-    allBooks(author: String): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
 `
@@ -108,8 +108,24 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) =>
-      books.filter((book) => book.author === args.author),
+    allBooks: (root, args) => {
+      const { author, genre } = args
+      return books.filter((book) => {
+        //filter => only if something is true is will go to the new array
+        let matchA = true
+        let matchG = true
+        if (author) {
+          matchA = book.author === author
+          //if not the same author = false
+        }
+        if (genre) {
+          matchG = book.genres.includes(genre)
+          // if not includes genre = false
+        }
+        return matchA && matchG
+        //if one of them flase the book that was checked will not be included.
+      })
+    },
     allAuthors: () => authors
   },
   Author: {
