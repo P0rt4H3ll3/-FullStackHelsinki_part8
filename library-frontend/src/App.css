@@ -1,0 +1,13 @@
+.nav-link {
+  text-decoration: none;
+  color: black; /* Normal text color */
+  border: 2px solid lightgrey;
+  border-radius: 2px;
+  padding: 2px 4px;
+}
+
+.nav-link:hover {
+  color: blueviolet; /* Text color on hover */
+  border-color: blueviolet; /* Change border color on hover if needed */
+  background-color: rgb(221, 221, 221);
+}
