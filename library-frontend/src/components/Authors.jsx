@@ -26,7 +26,7 @@ const Authors = ({ setError }) => {
     event.preventDefault()
     console.log('this is the name', name)
     console.log('this is the born ', born)
-    updateAuthor({ variables: { name: name.value, setBornTo: born } })
+    updateAuthor({ variables: { name: name.value, born: born } })
     setName('')
     setBorn('')
   }
