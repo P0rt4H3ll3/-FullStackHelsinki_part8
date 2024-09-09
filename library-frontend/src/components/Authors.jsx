@@ -3,13 +3,13 @@ import { AUTHORS_ALL, AUTHOR_CHANGE_BORN } from '../queries'
 import { useState } from 'react'
 import Select from 'react-select'
 
-const Authors = ({ setError }) => {
+const Authors = ({ setError, token }) => {
   const authors = useQuery(AUTHORS_ALL)
 
-  const [name, setName] = useState('')
+  const [author, setAuthor] = useState('')
   const [born, setBorn] = useState('')
 
-  const options = authors.data.allAuthors.map((a) => ({
+  const options = authors?.data?.allAuthors.map((a) => ({
     value: a.name,
     label: a.name
   }))
@@ -24,14 +24,11 @@ const Authors = ({ setError }) => {
 
   const submitBorn = async (event) => {
     event.preventDefault()
-    console.log('this is the name', name)
-    console.log('this is the born ', born)
-    updateAuthor({ variables: { name: name.value, born: born } })
-    setName('')
+    updateAuthor({ variables: { author: author.value, born: born } })
+    setAuthor('')
     setBorn('')
   }
-
-  if (authors.loading) {
+  if (!authors || authors.loading) {
     return <div>loading...</div>
   }
 
@@ -46,7 +43,7 @@ const Authors = ({ setError }) => {
             <th>books</th>
           </tr>
           {authors.data.allAuthors.map((a) => (
-            <tr key={a.name}>
+            <tr key={a.id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
@@ -55,22 +52,25 @@ const Authors = ({ setError }) => {
         </tbody>
       </table>
 
-      <h2>Set birthyear</h2>
-      <form onSubmit={submitBorn}>
+      {token && (
         <div>
-          name{' '}
-          <Select defaultValue={name} onChange={setName} options={options} />
+          <h2>Set birthyear</h2>
+          <form onSubmit={submitBorn}>
+            <div>
+              author <Select onChange={setAuthor} options={options} />
+            </div>
+            <div>
+              born{' '}
+              <input
+                type="number"
+                value={born}
+                onChange={({ target }) => setBorn(parseInt(target.value))}
+              />
+            </div>
+            <button type="submit">update author</button>
+          </form>
         </div>
-        <div>
-          born{' '}
-          <input
-            type="number"
-            value={born}
-            onChange={({ target }) => setBorn(parseInt(target.value))}
-          />
-        </div>
-        <button type="submit">update author</button>
-      </form>
+      )}
     </div>
   )
 }

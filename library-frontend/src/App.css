@@ -1,4 +1,6 @@
-.nav-link {
+.nav-link,
+.logout {
+  background-color: white;
   text-decoration: none;
   color: black; /* Normal text color */
   border: 2px solid lightgrey;
@@ -9,5 +11,11 @@
 .nav-link:hover {
   color: blueviolet; /* Text color on hover */
   border-color: blueviolet; /* Change border color on hover if needed */
+  background-color: rgb(221, 221, 221);
+}
+
+.logout:hover {
+  color: rgb(236, 84, 142); /* Text color on hover */
+  border-color: rgb(236, 84, 142); /* Change border color on hover if needed */
   background-color: rgb(221, 221, 221);
 }
