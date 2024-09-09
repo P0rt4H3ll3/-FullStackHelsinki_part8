@@ -26,6 +26,7 @@ export const BOOKS_ALL = gql`
     }
   }
 `
+
 export const COUNT_AUTHORS = gql`
   query authorCount {
     authorCount
