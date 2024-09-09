@@ -18,7 +18,6 @@ const LoginForm = ({ setToken, setError }) => {
       const token = result.data.login.value
       setToken(token)
       localStorage.setItem('library-user-token', token)
-      console.log('Login successful, navigating to home')
       navigate('/')
     }
   }, [result.data, setToken, navigate])

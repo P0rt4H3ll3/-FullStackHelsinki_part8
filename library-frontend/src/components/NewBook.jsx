@@ -20,7 +20,7 @@ const NewBook = ({ setError }) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    createNewBook({ variables: { title, published, author, genres, genre } })
+    createNewBook({ variables: { title, published, author, genres } })
     console.log('added book ')
     setTitle('')
     setPublished('')

@@ -2,8 +2,9 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import Recommendations from './components/Recommendations'
 
-import { Routes, Link, Route, Navigate } from 'react-router-dom'
+import { Routes, Link, Route, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import Notify from './components/Notify'
 import { useApolloClient } from '@apollo/client'
@@ -12,6 +13,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+  const navigate = useNavigate()
 
   const notify = (message) => {
     setErrorMessage(message)
@@ -22,8 +24,9 @@ const App = () => {
   const logout = () => {
     console.log('logout')
     setToken(null)
-    window.localStorage.removeItem('library-user-token')
+    localStorage.removeItem('library-user-token')
     client.resetStore()
+    navigate('/login')
   }
 
   return (
@@ -41,6 +44,9 @@ const App = () => {
           </Link>
         ) : (
           <>
+            <Link className="nav-link" to="/recommendations">
+              recommendations
+            </Link>
             <Link className="nav-link" to="/add">
               add book
             </Link>
@@ -64,16 +70,8 @@ const App = () => {
         />
         <Route path={'/'} element={<Books />} />
         <Route path={'/books'} element={<Books />} />
-        <Route
-          path="/add"
-          element={
-            token ? (
-              <NewBook setError={notify} />
-            ) : (
-              <LoginForm setToken={setToken} setError={notify} />
-            )
-          }
-        />
+        <Route path="/add" element={<NewBook setError={notify} />} />
+        <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
 
       <div style={{}}>
