@@ -22,9 +22,14 @@ const Books = () => {
     }
   }, [genresData])
 
-  const { loading, error, data } = useQuery(BOOKS_ALL, {
+  const { loading, error, data, refetch } = useQuery(BOOKS_ALL, {
     variables: { genre: filter || null }
   })
+
+  const handleGenre = (newGenre) => {
+    setFilter(newGenre)
+    refetch({ genre: newGenre || null })
+  }
 
   if (loading || genresLoading) return <div>loading...</div>
   if (error || genresError)
@@ -54,7 +59,7 @@ const Books = () => {
         </tbody>
       </table>
 
-      <GenreFilter genres={allGenres} setFilter={setFilter} />
+      <GenreFilter genres={allGenres} setFilter={handleGenre} />
     </div>
   )
 }

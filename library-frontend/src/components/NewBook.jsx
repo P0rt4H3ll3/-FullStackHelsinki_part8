@@ -15,6 +15,21 @@ const NewBook = ({ setError }) => {
     onError: (error) => {
       const message = error.graphQLErrors.map((e) => e.message).join('\n')
       setError(message)
+    },
+    update: (cache, { data: { addOneBook } }) => {
+      //deconstruct the response to get direct to addOneBook new book data
+      cache.updateQuery({ query: BOOKS_ALL }, (data) => {
+        //Data is fetched from the Apollo Client’s cache
+        if (data && data.allBooks) {
+          return {
+            allBooks: [...data.allBooks, addOneBook] //append the new book data
+          }
+        } else {
+          return {
+            allBooks: [addOneBook] // in case there is no cache data
+          }
+        }
+      })
     }
   })
 
