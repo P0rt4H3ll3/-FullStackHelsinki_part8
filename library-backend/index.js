@@ -105,7 +105,6 @@ const resolvers = {
       return books
     },
     me: (root, args, context) => {
-      console.log(context.currentUser)
       return context.currentUser
     }
   },
@@ -248,19 +247,19 @@ startStandaloneServer(server, {
   listen: { port: 4000 },
   context: async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null
-    //console.log(req.headers.authorization)
     if (auth && auth.startsWith('Bearer ')) {
-      const decodeToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET)
-      //console.log(decodeToken)
-      // {
-      //   "username": "Philley",
-      //   "id": "66dc3919f680c6153b778ecb",
-      //   "iat": 1725716178
-      // } The iat field in the decoded JWT stands for "Issued At" and represents the time when the token was created.
-      const currentUser = await User.findById(decodeToken.id) //error was here .id instead of ._id
-      //console.log(currentUser)
-      return { currentUser }
+      try {
+        const decodedToken = jwt.verify(
+          auth.substring(7),
+          process.env.JWT_SECRET
+        )
+        const currentUser = await User.findById(decodedToken.id)
+        return { currentUser } // Always return an object
+      } catch (error) {
+        console.error('Error verifying token:', error)
+      }
     }
+    return {} // Ensure context is always an object
   }
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`)
