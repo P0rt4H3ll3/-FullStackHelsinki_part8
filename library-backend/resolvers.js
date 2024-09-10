@@ -11,7 +11,17 @@ const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async () => {
+      const authors = await Author.find({})
+      const books = await Book.find({}).populate('author')
+      return authors.map((author) => ({
+        name: author.name,
+        bookCount: books.filter((book) => book.author.name === author.name)
+          .length,
+        born: author.born,
+        id: author._id
+      }))
+    },
     allBooks: async (root, args) => {
       let query = {}
 
