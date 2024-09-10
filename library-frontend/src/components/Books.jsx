@@ -23,7 +23,7 @@ const Books = () => {
   }, [genresData])
 
   const { loading, error, data, refetch } = useQuery(BOOKS_ALL, {
-    variables: { genre: filter || null }
+    variables: filter ? { genre: filter } : {} //that works for updating the cache, previously the cache update was not reflexted on the frontend even though the console told me the cache hat the updated element, totally leaving the genrefilter when genre = ''
   })
 
   const handleGenre = (newGenre) => {

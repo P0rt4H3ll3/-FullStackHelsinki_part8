@@ -63,7 +63,7 @@ export const ME = gql`
 //---------------------------------------------MUTATIONS-------------------------------------------------
 
 export const BOOKS_ADD = gql`
-  mutation addOneBook(
+  mutation addBook(
     $title: String!
     $author: String!
     $published: Int!

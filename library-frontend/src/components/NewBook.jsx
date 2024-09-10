@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client'
+import { updateCache } from '../helper_functions/updateCache'
 
 import { useState } from 'react'
 import { BOOKS_ALL, BOOKS_ADD, AUTHORS_ALL } from '../queries'
@@ -16,17 +17,18 @@ const NewBook = ({ setError }) => {
       const message = error.graphQLErrors.map((e) => e.message).join('\n')
       setError(message)
     },
-    update: (cache, { data: { addOneBook } }) => {
-      //deconstruct the response to get direct to addOneBook new book data
+
+    update: (cache, { data: { addBook } }) => {
+      //deconstruct the response to get direct to addBook new book data
       cache.updateQuery({ query: BOOKS_ALL }, (data) => {
         //Data is fetched from the Apollo Client’s cache
         if (data && data.allBooks) {
           return {
-            allBooks: [...data.allBooks, addOneBook] //append the new book data
+            allBooks: [...data.allBooks, addBook] //append the new book data
           }
         } else {
           return {
-            allBooks: [addOneBook] // in case there is no cache data
+            allBooks: [addBook] // in case there is no cache data
           }
         }
       })

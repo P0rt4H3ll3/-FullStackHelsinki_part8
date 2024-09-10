@@ -8,7 +8,8 @@ import { Routes, Link, Route, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Notify from './components/Notify'
 import { useApolloClient, useSubscription } from '@apollo/client'
-import { BOOK_ADDED } from './queries'
+import { BOOK_ADDED, BOOKS_ALL } from './queries'
+import { updateCache } from './helper_functions/updateCache'
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -18,8 +19,13 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      console.log(data.data.bookAdded.title)
-      window.alert(`the book '${data.data.bookAdded.title}' was added`)
+      const addedBook = data.data?.bookAdded
+      if (addedBook) {
+        notify(`The book '${addedBook.title}' was added`)
+        updateCache(client.cache, BOOKS_ALL, addedBook)
+      } else {
+        console.error('No data received for bookAdded subscription')
+      }
     }
   })
 
