@@ -5,15 +5,30 @@ import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
 
 import { Routes, Link, Route, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Notify from './components/Notify'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './queries'
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [token, setToken] = useState(null)
   const client = useApolloClient()
   const navigate = useNavigate()
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data.data.bookAdded.title)
+      window.alert(`the book '${data.data.bookAdded.title}' was added`)
+    }
+  })
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('library-user-token')
+    if (savedToken) {
+      setToken(savedToken)
+    }
+  }, [client])
 
   const notify = (message) => {
     setErrorMessage(message)
